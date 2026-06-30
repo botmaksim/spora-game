@@ -1,0 +1,59 @@
+# ========================================== #
+#                      ОС                    #
+# ========================================== #
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
+*.tmp
+
+# ========================================== #
+#                    Unity                   #
+# ========================================== #
+[Library]/
+[Temp]/
+[Obj]/
+[Logs]/
+[UserSettings]/
+[MemoryCaptures]/
+[Build]/
+[Builds]/
+[BuildTargetChannels]/
+Reaserch/
+🎨/
+MemoryCaptures/
+/Assets/Plugins/Editor/JetBrains/
+.vs/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+sysinfo.txt
+CrashReport_*.txt
+
+# ========================================== #
+#                    Godot                   #
+# ========================================== #
+.godot/
+.import/
+export_presets.cfg
+*.translation
+
+# ========================================== #
+#             Графика (Aseprite/PS)          #
+# ========================================== #
+*.backup*
+*-[Backup]-*
