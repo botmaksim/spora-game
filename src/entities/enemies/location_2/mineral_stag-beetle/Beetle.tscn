@@ -1,0 +1,34 @@
+[gd_scene format=3]
+[ext_resource type="Texture2D" path="res://src/assets/placeholder_white.png" id="tex_placeholder"]
+
+[ext_resource type="Script" path="res://src/entities/enemies/location_2/mineral_stag-beetle/beetle.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/components/decay_manager.gd" id="2_decay"]
+[ext_resource type="Script" path="res://src/components/interaction/interaction_area.gd" id="3_interact"]
+
+[node name="Beetle" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("tex_placeholder")
+scale = Vector2(64, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="JumpBufferTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Abilities" type="Node" parent="."]
+
+[node name="AIController" type="Node" parent="."]
+
+[node name="DecayManager" type="Node" parent="."]
+script = ExtResource("2_decay")
+
+[node name="InteractionArea" type="Area2D" parent="."]
+script = ExtResource("3_interact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+

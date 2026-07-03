@@ -1,0 +1,20 @@
+[gd_scene format=3]
+[ext_resource type="Texture2D" path="res://src/assets/placeholder_white.png" id="tex_placeholder"]
+
+[ext_resource type="Script" path="res://src/npc/hermit_star/hermit_star.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/components/interaction/interaction_area.gd" id="3_interact"]
+
+[node name="HermitStar" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("tex_placeholder")
+scale = Vector2(64, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="InteractionArea" type="Area2D" parent="."]
+script = ExtResource("3_interact")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+

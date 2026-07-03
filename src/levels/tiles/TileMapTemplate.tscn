@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="TileSet" path="res://src/levels/tiles/world_tileset.tres" id="1_ts"]
+
+[node name="LevelMap" type="Node2D"]
+
+[node name="BackgroundLayer" type="TileMapLayer" parent="."]
+modulate = Color(0.5, 0.5, 0.5, 1)
+tile_set = ExtResource("1_ts")
+
+[node name="TerrainLayer" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_ts")
+
+[node name="WaterLayer" type="TileMapLayer" parent="."]
+z_index = 5
+tile_set = ExtResource("1_ts")

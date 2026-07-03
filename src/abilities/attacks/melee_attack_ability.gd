@@ -1,0 +1,23 @@
+extends BaseAbility
+class_name MeleeAttackAbility
+
+@export var damage: int = 20
+
+func on_pressed(is_player: bool) -> void:
+	var hitbox = Area2D.new()
+	var coll = CollisionShape2D.new()
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(40, 40)
+	coll.shape = shape
+	coll.position = Vector2(body.facing_dir * 40, 0)
+	hitbox.add_child(coll)
+	body.add_child(hitbox)
+	
+	hitbox.body_entered.connect(_on_hitbox_entered)
+	
+	await get_tree().create_timer(0.1).timeout
+	hitbox.queue_free()
+
+func _on_hitbox_entered(other: Node2D) -> void:
+	if other != body and other.has_method("take_damage"):
+		other.take_damage(damage * body.damage_multiplier)

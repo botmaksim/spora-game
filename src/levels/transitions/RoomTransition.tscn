@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cn52bcdufylxw"]
+
+[ext_resource type="Script" uid="uid://bugo8733mwnq6" path="res://src/levels/transitions/room_transition.gd" id="1_xxx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(64, 128)
+
+[node name="RoomTransition" type="Area2D" unique_id=1683255617]
+collision_layer = 0
+script = ExtResource("1_xxx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=497579004]
+shape = SubResource("RectangleShape2D_1")

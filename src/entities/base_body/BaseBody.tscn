@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://j2fsar1lf0yi"]
+
+[ext_resource type="Script" uid="uid://vt7gg2ak0lv5" path="res://src/entities/base_body/base_body.gd" id="1_3e6i3"]
+[ext_resource type="Texture2D" uid="uid://cnaq8pjm1163g" path="res://src/assets/placeholder_white.png" id="2_upcwl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0to1o"]
+
+[node name="BaseBody" type="CharacterBody2D" unique_id=1645183311]
+script = ExtResource("1_3e6i3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=392969914]
+shape = SubResource("RectangleShape2D_0to1o")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=646417206]
+position = Vector2(4.7683716e-07, 4.7683716e-07)
+scale = Vector2(19.999998, 20)
+texture = ExtResource("2_upcwl")
+
+[node name="CoyoteTimer" type="Timer" parent="." unique_id=1190052135]
+
+[node name="JumpBufferTimer" type="Timer" parent="." unique_id=1083583692]
