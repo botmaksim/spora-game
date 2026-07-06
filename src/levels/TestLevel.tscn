@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://tqwbfv21hyqt"]
+
+[ext_resource type="PackedScene" uid="uid://j2fsar1lf0yi" path="res://src/entities/base_body/BaseBody.tscn" id="1_hqaei"]
+[ext_resource type="PackedScene" uid="uid://e8dw4hmwspgf" path="res://src/core/PlayerController.tscn" id="2_hitm7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eqxgp"]
+size = Vector2(317, 174)
+
+[node name="TestLevel" type="Node2D" unique_id=1919146411]
+
+[node name="BaseBody" parent="." unique_id=1645183311 instance=ExtResource("1_hqaei")]
+position = Vector2(20, -22)
+
+[node name="CollisionShape2D" parent="BaseBody" index="0" unique_id=392969914]
+position = Vector2(17, -3)
+
+[node name="Sprite2D" parent="BaseBody" index="1" unique_id=646417206]
+position = Vector2(17, -2)
+
+[node name="PlayerController" parent="BaseBody" unique_id=1203077250 instance=ExtResource("2_hitm7")]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1831699544]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=508278345]
+position = Vector2(148.5, 77)
+shape = SubResource("RectangleShape2D_eqxgp")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D/CollisionShape2D" unique_id=1735370474]
+offset_left = -158.5
+offset_top = -87.0
+offset_right = 158.5
+offset_bottom = 88.0
+color = Color(1, 0, 1, 1)
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1167701857]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1713449613]
+position = Vector2(-279, 82)
+shape = SubResource("RectangleShape2D_eqxgp")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D2/CollisionShape2D" unique_id=1797547286]
+offset_left = -159.0
+offset_top = -87.0
+offset_right = 158.0
+offset_bottom = 88.0
+color = Color(1, 0, 1, 1)
+
+[editable path="BaseBody"]

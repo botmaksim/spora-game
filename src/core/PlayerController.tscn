@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://e8dw4hmwspgf"]
+
+[ext_resource type="Script" uid="uid://dpxmcw4o61cpv" path="res://src/core/player_controller.gd" id="1_64dnl"]
+
+[node name="PlayerController" type="Node" unique_id=1203077250]
+script = ExtResource("1_64dnl")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1239590963]
+position_smoothing_enabled = true
