@@ -1,34 +1,42 @@
-[gd_scene format=3]
-[ext_resource type="Texture2D" path="res://src/assets/placeholder_white.png" id="tex_placeholder"]
+[gd_scene format=3 uid="uid://cbfkec85o1ecf"]
 
-[ext_resource type="Script" path="res://src/entities/enemies/location_1/mushroom_ant/ant.gd" id="1_script"]
-[ext_resource type="Script" path="res://src/components/decay_manager.gd" id="2_decay"]
-[ext_resource type="Script" path="res://src/components/interaction/interaction_area.gd" id="3_interact"]
+[ext_resource type="Script" uid="uid://d2fdwyx5w5a06" path="res://src/entities/enemies/location_1/mushroom_ant/ant.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://broyyswe122he" path="res://src/components/decay_manager.gd" id="2_decay"]
+[ext_resource type="Texture2D" uid="uid://b1kedunbt5v5s" path="res://src/assets/ant_sprites/Ant_Idle.png" id="2_ev4pn"]
+[ext_resource type="Texture2D" uid="uid://dytij8nnqf0rs" path="res://src/assets/ant_sprites/ant_jump.png" id="3_c6dpt"]
+[ext_resource type="Script" uid="uid://bgh4qkiqoa7rv" path="res://src/components/interaction/interaction_area.gd" id="3_interact"]
+[ext_resource type="Texture2D" uid="uid://dm0axkasd7l5r" path="res://src/assets/ant_sprites/ant_attack.png" id="4_lfhu2"]
+[ext_resource type="Texture2D" uid="uid://c6hah0lqw4aib" path="res://src/assets/ant_sprites/ant_death.png" id="5_qobpf"]
+[ext_resource type="Texture2D" uid="uid://cnaq8pjm1163g" path="res://src/assets/placeholder_white.png" id="tex_placeholder"]
 
-[node name="Ant" type="CharacterBody2D"]
+[node name="Ant" type="CharacterBody2D" unique_id=1875148919]
 script = ExtResource("1_script")
+tex_idle = ExtResource("2_ev4pn")
+tex_move = ExtResource("2_ev4pn")
+tex_jump = ExtResource("3_c6dpt")
+tex_attack = ExtResource("4_lfhu2")
+tex_corpse = ExtResource("5_qobpf")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("tex_placeholder")
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=590266418]
 scale = Vector2(64, 64)
+texture = ExtResource("tex_placeholder")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=285529329]
 
-[node name="CoyoteTimer" type="Timer" parent="."]
+[node name="CoyoteTimer" type="Timer" parent="." unique_id=78182059]
 one_shot = true
 
-[node name="JumpBufferTimer" type="Timer" parent="."]
+[node name="JumpBufferTimer" type="Timer" parent="." unique_id=1860147961]
 one_shot = true
 
-[node name="Abilities" type="Node" parent="."]
+[node name="Abilities" type="Node" parent="." unique_id=1936075206]
 
-[node name="AIController" type="Node" parent="."]
+[node name="AIController" type="Node" parent="." unique_id=577331771]
 
-[node name="DecayManager" type="Node" parent="."]
+[node name="DecayManager" type="Node" parent="." unique_id=1588708836]
 script = ExtResource("2_decay")
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="." unique_id=1870798952]
 script = ExtResource("3_interact")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=1607124211]

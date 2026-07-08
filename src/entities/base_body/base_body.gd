@@ -28,6 +28,15 @@ signal died(body: Node2D)
 @export_group("Combat")
 @export var invulnerability_time: float = 0.5 
 
+#добавил шнягу для экспорта текстур
+@export_group("Visuals & Textures")
+@export var tex_idle: Texture2D
+@export var tex_move: Texture2D
+@export var tex_jump: Texture2D
+@export var tex_attack: Texture2D
+@export var tex_corpse: Texture2D
+@export var tex_possession: Texture2D #тупо для споры
+
 @export_group("Editor Tools")
 @export var sync_shape_to_sprite: bool = false:
 	set(value):
@@ -40,6 +49,16 @@ var is_invulnerable: bool = false
 
 enum BodyState { NORMAL, CORPSE, POSSESSED }
 var current_state: BodyState = BodyState.NORMAL
+#ниже переменная для хранение теккстуры захваченного тела
+var possessed_texture: Texture2D = null
+
+#переменные для сохранения базовых текстур споры для возвращения при выходе их тела
+var default_tex_idle: Texture2D
+var default_tex_move: Texture2D
+var default_tex_jump: Texture2D
+var default_tex_attack: Texture2D
+var default_tex_corpse: Texture2D
+var default_tex_possession: Texture2D
 
 var speed_multiplier: float = 1.0
 var damage_multiplier: float = 1.0
@@ -59,6 +78,14 @@ var abilities: Dictionary = {}
 
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
+	
+	#сохранение родных текстур споры при запуске
+	default_tex_idle = tex_idle
+	default_tex_move = tex_move
+	default_tex_jump = tex_jump
+	default_tex_attack = tex_attack
+	default_tex_corpse = tex_corpse
+	default_tex_possession = tex_possession
 	
 	current_hp = max_hp
 	was_on_floor = is_on_floor()
@@ -170,11 +197,21 @@ func die() -> void:
 	set_state(BodyState.CORPSE)
 	died.emit(self)
 
-func set_state(new_state: BodyState) -> void:
+func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 	current_state = new_state
 	match current_state:
 		BodyState.NORMAL:
 			is_alive = true
+			possessed_texture = null #сбрасываем текстуру челика из которого вышли
+			# Возвращаем родные текстуры Споры при выходе из тела
+			tex_idle = default_tex_idle
+			tex_move = default_tex_move
+			tex_jump = default_tex_jump
+			tex_attack = default_tex_attack
+			tex_corpse = default_tex_corpse
+			tex_possession = default_tex_possession
+			if sprite and tex_idle:
+				sprite.texture = tex_idle
 			if sprite:
 				sprite.modulate = Color(1, 1, 1, 1)
 		BodyState.CORPSE:
@@ -187,8 +224,31 @@ func set_state(new_state: BodyState) -> void:
 			hp_changed.emit(current_hp, max_hp)
 			if get_node_or_null("/root/PossessionManager"):
 				get_node("/root/PossessionManager").unregister_corpse(self)
+			#копирование и вставка текстур жмурика после захвата тела на игрока
+			if source_body:
+				copy_textures_from(source_body)
+				if sprite and source_body.sprite:
+					sprite.texture = source_body.sprite.texture
+					possessed_texture = source_body.sprite.texture # Сохраняем актуальную текстуру
+				_sync_shape() #синхронизация коллизии под размер нового спрайта врага
 			if sprite:
 				sprite.modulate = Color(0.2, 1.0, 0.2, 1.0)
+
+#функция смены текстуры для дочерних классов
+func apply_texture(new_texture: Texture2D) -> void:
+	if not sprite: return
+	if sprite.texture != new_texture:
+		sprite.texture = new_texture 
+
+#функция для копирования всего набора текстур захваченного тела спорой
+func copy_textures_from(source_body: BaseBody) -> void:
+	if not source_body: return
+	tex_idle = source_body.tex_idle
+	tex_move = source_body.tex_move
+	tex_jump = source_body.tex_jump
+	tex_attack = source_body.tex_attack
+	tex_corpse = source_body.tex_corpse
+	tex_possession = source_body.tex_possession
 
 func _sync_shape() -> void:
 	if not Engine.is_editor_hint(): return
