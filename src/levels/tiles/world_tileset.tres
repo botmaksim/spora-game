@@ -1,7 +1,35 @@
 [gd_resource type="TileSet" format=3 uid="uid://cd5p8xj5q7vwu"]
 
+[ext_resource type="Texture2D" uid="uid://byukrlyyg2rqo" path="res://src/assets/Environment/2d_metroidvania_serie_mockup_1_tileset.png" id="1_5xvjq"]
+[ext_resource type="Texture2D" uid="uid://knxylrg3qyi7" path="res://src/assets/Environment/block_temp.png" id="2_6irmf"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lo0jw"]
+texture = ExtResource("1_5xvjq")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5xvjq"]
+texture = ExtResource("2_6irmf")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:1/0 = 0
+0:1/0/terrain_set = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:1/0 = 0
+1:1/0/terrain_set = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
 [resource]
-tile_size = Vector2i(64, 64)
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 2
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Location 1 (Fungus)"
 terrain_set_0/terrain_0/color = Color(0.6, 0.3, 0.2, 1)
@@ -11,3 +39,5 @@ terrain_set_0/terrain_2/name = "Location 3 (Moss)"
 terrain_set_0/terrain_2/color = Color(0.2, 0.5, 0.2, 1)
 terrain_set_0/terrain_3/name = "Water"
 terrain_set_0/terrain_3/color = Color(0.2, 0.4, 0.8, 1)
+sources/0 = SubResource("TileSetAtlasSource_lo0jw")
+sources/3 = SubResource("TileSetAtlasSource_5xvjq")

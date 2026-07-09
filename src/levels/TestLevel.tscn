@@ -1,15 +1,15 @@
-[gd_scene format=3 uid="uid://tqwbfv21hyqt"]
+[gd_scene format=4 uid="uid://tqwbfv21hyqt"]
 
 [ext_resource type="PackedScene" uid="uid://j2fsar1lf0yi" path="res://src/entities/base_body/BaseBody.tscn" id="1_hqaei"]
 [ext_resource type="PackedScene" uid="uid://e8dw4hmwspgf" path="res://src/core/PlayerController.tscn" id="2_hitm7"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_eqxgp"]
-size = Vector2(317, 174)
+[ext_resource type="PackedScene" uid="uid://cn52bcdufylxw" path="res://src/levels/transitions/RoomTransition.tscn" id="3_hitm7"]
+[ext_resource type="TileSet" uid="uid://cd5p8xj5q7vwu" path="res://src/levels/tiles/world_tileset.tres" id="4_eqxgp"]
 
 [node name="TestLevel" type="Node2D" unique_id=1919146411]
 
 [node name="BaseBody" parent="." unique_id=1645183311 instance=ExtResource("1_hqaei")]
-position = Vector2(20, -22)
+position = Vector2(25, -25)
+collision_mask = 2
 
 [node name="CollisionShape2D" parent="BaseBody" index="0" unique_id=392969914]
 position = Vector2(17, -3)
@@ -19,30 +19,22 @@ position = Vector2(17, -2)
 
 [node name="PlayerController" parent="BaseBody" unique_id=1203077250 instance=ExtResource("2_hitm7")]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1831699544]
+[node name="Camera2D" type="Camera2D" parent="BaseBody" unique_id=1237364398]
+position = Vector2(16, -19)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.25
+drag_right_margin = 0.25
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=508278345]
-position = Vector2(148.5, 77)
-shape = SubResource("RectangleShape2D_eqxgp")
+[node name="RoomTransition" parent="." unique_id=1683255617 instance=ExtResource("3_hitm7")]
+position = Vector2(300, -59)
+target_scene_path = "uid://ctp3d34f2pjr5"
+spawn_point_id = "test"
 
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D/CollisionShape2D" unique_id=1735370474]
-offset_left = -158.5
-offset_top = -87.0
-offset_right = 158.5
-offset_bottom = 88.0
-color = Color(1, 0, 1, 1)
-
-[node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1167701857]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1713449613]
-position = Vector2(-279, 82)
-shape = SubResource("RectangleShape2D_eqxgp")
-
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D2/CollisionShape2D" unique_id=1797547286]
-offset_left = -159.0
-offset_top = -87.0
-offset_right = 158.0
-offset_bottom = 88.0
-color = Color(1, 0, 1, 1)
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=2105641216]
+tile_map_data = PackedByteArray("AAAJAAAAAwABAAEAAAAJAAEAAwABAAEAAAAJAAIAAwABAAEAAAAJAAMAAwABAAEAAAAJAAQAAwABAAEAAADx/wQAAwABAAEAAADy/wQAAwABAAEAAADz/wQAAwABAAEAAAD0/wQAAwABAAEAAAD1/wQAAwABAAEAAAD2/wQAAwABAAEAAAD3/wQAAwABAAEAAAD4/wQAAwABAAEAAAD5/wQAAwABAAEAAAD6/wQAAwABAAEAAAD7/wQAAwABAAEAAAD8/wQAAwABAAEAAAD9/wQAAwABAAEAAAD+/wQAAwABAAEAAAD//wQAAwABAAEAAAAAAAQAAwABAAEAAAABAAQAAwABAAEAAAACAAQAAwABAAEAAAADAAQAAwABAAEAAAAEAAQAAwABAAEAAAAFAAQAAwABAAEAAAAGAAQAAwABAAEAAAAHAAQAAwABAAEAAAAIAAQAAwABAAEAAADw//f/AwABAAEAAADw//j/AwABAAEAAADw//n/AwABAAEAAADw//r/AwABAAEAAADw//v/AwABAAEAAADw//z/AwABAAEAAADw//3/AwABAAEAAADw//7/AwABAAEAAADw////AwABAAEAAADw/wAAAwABAAEAAADw/wEAAwABAAEAAADw/wIAAwABAAEAAADw/wMAAwABAAEAAADw/wQAAwABAAEAAADx//f/AwABAAEAAADy//f/AwABAAEAAADz//f/AwABAAEAAAD0//f/AwABAAEAAAD1//f/AwABAAEAAAD2//f/AwABAAEAAAD3//f/AwABAAEAAAD4//f/AwABAAEAAAD5//f/AwABAAEAAAD6//f/AwABAAEAAAD7//f/AwABAAEAAAD8//f/AwABAAEAAAD9//f/AwABAAEAAAD+//f/AwABAAEAAAD///f/AwABAAEAAAAAAPf/AwABAAEAAAABAPf/AwABAAEAAAACAPf/AwABAAEAAAADAPf/AwABAAEAAAAEAPf/AwABAAEAAAAFAPf/AwABAAEAAAAGAPf/AwABAAEAAAAHAPf/AwABAAEAAAAIAPf/AwABAAEAAAAJAPf/AwABAAEAAAAJAPj/AwABAAEAAAAJAPn/AwABAAEAAAAJAPr/AwABAAEAAAAJAPv/AwABAAEAAAAGAAAAAwABAAEAAAAHAAAAAwABAAEAAAAIAAAAAwABAAEAAAAHAAIAAwABAAEAAAAHAAMAAwABAAEAAAD8//r/AwABAAEAAAD9//r/AwABAAEAAAD+//r/AwABAAEAAAD///r/AwABAAEAAAD3//z/AwABAAEAAAD4//z/AwABAAEAAAD5//z/AwABAAEAAAD6//z/AwABAAEAAADz//3/AwABAAEAAAD0//3/AwABAAEAAAD1//3/AwABAAEAAADx////AwABAAEAAADz/wAAAwABAAEAAADz/wEAAwABAAEAAAD0/wAAAwABAAEAAAD0/wEAAwABAAEAAAD2/wIAAwABAAEAAAABAAMAAwABAAEAAAACAAMAAwABAAEAAAACAAIAAwABAAEAAAADAAIAAwABAAEAAAAFAAMAAwABAAEAAAD5////AwABAAEAAAD6////AwABAAEAAAD7////AwABAAEAAAD8////AwABAAEAAAACAPz/AwABAAEAAAADAPz/AwABAAEAAAAEAPz/AwABAAEAAAAFAPz/AwABAAEAAAAGAPn/AwABAAEAAAA=")
+tile_set = ExtResource("4_eqxgp")
 
 [editable path="BaseBody"]
