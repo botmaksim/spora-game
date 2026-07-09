@@ -275,20 +275,13 @@ func _sync_shape() -> void:
 		col.shape = col.shape.duplicate() 
 		col.shape.size = sp.texture.get_size() * sp.scale
 
-# ========================================================
-# СИСТЕМА ДИНАМИЧЕСКОЙ КАМЕРЫ И СЛЕЖЕНИЯ ПРИ ПЕРЕХОДАХ
-# ========================================================
-
-# Срабатывает автоматически при входе персонажа на любую новую сцену
 func _notification(what: int) -> void:
 	if Engine.is_editor_hint(): return
 	
 	if what == NOTIFICATION_ENTER_TREE:
-		# Если это активный управляемый персонаж, принудительно возвращаем фокус камере
 		if has_node("PlayerController") or current_state == BodyState.POSSESSED:
 			_check_and_create_camera.call_deferred()
 
-# Функция создания и жесткой активации камеры на персонаже
 func _check_and_create_camera() -> void:
 	if Engine.is_editor_hint(): return
 	
@@ -298,11 +291,9 @@ func _check_and_create_camera() -> void:
 		camera.name = "DynamicCamera"
 		add_child(camera)
 		
-		# Настройки плавности хода
 		camera.position_smoothing_enabled = true
 		camera.position_smoothing_speed = 6.0
 		
-		# Включение "окна" безопасности (Deadzone)
 		camera.drag_horizontal_enabled = true
 		camera.drag_vertical_enabled = true
 		camera.drag_left_margin = 0.25
@@ -310,6 +301,5 @@ func _check_and_create_camera() -> void:
 		camera.drag_top_margin = 0.2
 		camera.drag_bottom_margin = 0.2
 	
-	# Заставляем движок сделать эту камеру активной прямо сейчас
 	camera.make_current()
-	print("[CAMERA SYSTEM] Фокус камеры успешно зафиксирован на: ", name)
+
