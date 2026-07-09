@@ -2,20 +2,34 @@
 
 [ext_resource type="PackedScene" uid="uid://j2fsar1lf0yi" path="res://src/entities/base_body/BaseBody.tscn" id="1_hqaei"]
 [ext_resource type="PackedScene" uid="uid://e8dw4hmwspgf" path="res://src/core/PlayerController.tscn" id="2_hitm7"]
+[ext_resource type="Script" uid="uid://cslkety32v588" path="res://src/entities/spora/spora.gd" id="2_r7c5c"]
 [ext_resource type="PackedScene" uid="uid://cn52bcdufylxw" path="res://src/levels/transitions/RoomTransition.tscn" id="3_hitm7"]
+[ext_resource type="Texture2D" uid="uid://d3j8sd5jvqts1" path="res://src/assets/bleb sprites/bleb_idle.png" id="3_l34wc"]
+[ext_resource type="Texture2D" uid="uid://1ivr6v0p1f4c" path="res://src/assets/bleb sprites/bleb_moving.png" id="4_52egn"]
 [ext_resource type="TileSet" uid="uid://cd5p8xj5q7vwu" path="res://src/levels/tiles/world_tileset.tres" id="4_eqxgp"]
+[ext_resource type="Texture2D" uid="uid://jyulaxikmh50" path="res://src/assets/bleb sprites/bleb_jump.png" id="5_my2n2"]
+[ext_resource type="Texture2D" uid="uid://b3rrhwdg756m0" path="res://src/assets/bleb sprites/bleb_attack.png" id="6_p2j2x"]
+[ext_resource type="Texture2D" uid="uid://hgugg5rn48cn" path="res://src/assets/bleb sprites/bleb_posession.png" id="7_3rsxu"]
 
 [node name="TestLevel" type="Node2D" unique_id=1919146411]
 
 [node name="BaseBody" parent="." unique_id=1645183311 instance=ExtResource("1_hqaei")]
 position = Vector2(25, -25)
 collision_mask = 2
+script = ExtResource("2_r7c5c")
+tex_idle = ExtResource("3_l34wc")
+tex_move = ExtResource("4_52egn")
+tex_jump = ExtResource("5_my2n2")
+tex_attack = ExtResource("6_p2j2x")
+tex_possession = ExtResource("7_3rsxu")
 
 [node name="CollisionShape2D" parent="BaseBody" index="0" unique_id=392969914]
-position = Vector2(17, -3)
+position = Vector2(0, 0.5)
 
 [node name="Sprite2D" parent="BaseBody" index="1" unique_id=646417206]
-position = Vector2(17, -2)
+position = Vector2(1.9073486e-06, -2.3841858e-07)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("3_l34wc")
 
 [node name="PlayerController" parent="BaseBody" unique_id=1203077250 instance=ExtResource("2_hitm7")]
 
