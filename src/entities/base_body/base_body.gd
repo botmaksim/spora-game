@@ -127,12 +127,12 @@ func _setup_hp_bar() -> void:
 	var style_bg = StyleBoxFlat.new()
 	style_bg.bg_color = Color(0.2, 0.2, 0.2, 0.8)
 	var style_fill = StyleBoxFlat.new()
-	style_fill.bg_color = Color(0.9, 0.1, 0.1, 1.0)
+	style_fill.bg_color = Color(0.2, 0.8, 0.2, 1.0)
 	hp_bar.add_theme_stylebox_override("background", style_bg)
 	hp_bar.add_theme_stylebox_override("fill", style_fill)
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
-	hp_bar.visible = true
+	hp_bar.visible = current_hp < max_hp
 	add_child(hp_bar)
 
 func _setup_contact_damage() -> void:
@@ -242,7 +242,9 @@ func take_damage(amount: int) -> void:
 	hp_changed.emit(current_hp, max_hp)
 	took_damage.emit(amount)
 	
-	if hp_bar: hp_bar.value = current_hp
+	if hp_bar:
+		hp_bar.value = current_hp
+		hp_bar.visible = current_hp > 0 and current_hp < max_hp
 	
 	if current_hp <= 0: die()
 
@@ -260,7 +262,7 @@ func die() -> void:
 	set_state(BodyState.CORPSE)
 	died.emit(self)
 
-func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
+func set_state(new_state: BodyState, source_body: CharacterBody2D = null) -> void:
 	current_state = new_state
 	
 	# ЗАЩИТА: проверяем, что мы в игре, а не в редакторе Godot
@@ -309,13 +311,9 @@ func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 				speed_multiplier = 1.0
 				damage_multiplier = 1.0
 				
-			#копирование и вставка текстур жмурика после захвата тела на игрока
-			if source_body:
-				copy_textures_from(source_body)
-				if sprite and source_body.sprite:
-					sprite.texture = source_body.sprite.texture
-					possessed_texture = source_body.sprite.texture # Сохраняем актуальную текстуру
-				_sync_shape() #синхронизация коллизии под размер нового спрайта врага
+			# Мы больше не копируем текстуры паразита в хоста,
+			# так как мы просто передаём PlayerController в тело хоста.
+			# Текстуры хоста остаются его родными.
 			if sprite:
 				sprite.modulate = Color(0.2, 1.0, 0.2, 1.0)
 			
@@ -329,7 +327,7 @@ func apply_texture(new_texture: Texture2D) -> void:
 		sprite.texture = new_texture 
 
 #функция для копирования всего набора текстур захваченного тела спорой
-func copy_textures_from(source_body: BaseBody) -> void:
+func copy_textures_from(source_body: CharacterBody2D) -> void:
 	if not source_body: return
 	tex_idle = source_body.tex_idle
 	tex_move = source_body.tex_move

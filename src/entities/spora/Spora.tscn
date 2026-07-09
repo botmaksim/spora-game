@@ -12,7 +12,11 @@
 
 [ext_resource type="PackedScene" path="res://src/abilities/attacks/MeleeAttackAbility.tscn" id="7_melee"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_spora"]
+size = Vector2(40, 40)
+
 [node name="Spora" type="CharacterBody2D" unique_id=372982113]
+collision_mask = 2
 script = ExtResource("1_script")
 tex_idle = ExtResource("2_mn8gp")
 tex_move = ExtResource("3_fsrri")
@@ -21,10 +25,16 @@ tex_attack = ExtResource("5_ils1u")
 tex_possession = ExtResource("6_sv52b")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=565789812]
-scale = Vector2(64, 64)
+scale = Vector2(0.05, 0.05)
 texture = ExtResource("tex_placeholder")
 
-[node name="JumpBufferTimer" type="Timer" parent="." unique_id=513468628]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_spora")
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="JumpBufferTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="Abilities" type="Node" parent="." unique_id=82120423]

@@ -1,6 +1,6 @@
 extends Node
 
-var target_body: CharacterBody2D
+var target_body
 
 func _ready() -> void:
 	update_target_body()
@@ -23,29 +23,112 @@ func _physics_process(_delta: float) -> void:
 	if target_body.has_method("receive_movement"):
 		target_body.receive_movement(move_dir, 0, jump_just_pressed, jump_released)
 		
-	if Input.is_action_just_pressed("ui_focus_next"):
-		attempt_possession()
-		
 	var attack_pressed = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 	if attack_pressed and not get_meta("attack_pressed_last_frame", false):
-		target_body.trigger_ability("melee", 0, true) # Spore uses melee, others might ignore or use their own
-		target_body.trigger_ability("dash", 0, true) # Ant uses dash
+		target_body.trigger_ability("melee", 0, true)
+		target_body.trigger_ability("dash", 0, true)
 	set_meta("attack_pressed_last_frame", attack_pressed)
 
-func attempt_possession() -> void:
+var radial_menu: Node2D = null
+var is_transitioning: bool = false
+
+func _input(event: InputEvent) -> void:
+	if not is_instance_valid(target_body) or target_body.current_state == target_body.BodyState.CORPSE:
+		return
+	if is_transitioning: return
+		
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if target_body is Spora:
+			if event.pressed:
+				open_radial_menu()
+			else:
+				close_radial_menu_and_possess()
+		else:
+			if event.pressed:
+				eject_from_host()
+
+func open_radial_menu() -> void:
+	if is_instance_valid(radial_menu):
+		radial_menu.queue_free()
+		radial_menu = null
+		
 	var pos_mgr = get_node_or_null("/root/PossessionManager")
-	if pos_mgr and target_body is Spora:
-		var best = pos_mgr.get_best_corpse(target_body.global_position, 200.0, 100.0)
-		if best:
-			target_body.is_possessing = true
+	if not pos_mgr: return
+	
+	var corpses = pos_mgr.get_corpses_in_radius(target_body.global_position, 800.0) # Увеличил радиус до 800
+	
+	var script = load("res://src/ui/possession_radial_menu.gd")
+	if not script: return
+	
+	radial_menu = script.new()
+	target_body.add_child(radial_menu)
+	radial_menu.setup(corpses)
+	
+	Engine.time_scale = 0.1
+
+func close_radial_menu_and_possess() -> void:
+	Engine.time_scale = 1.0
+	
+	if not is_instance_valid(radial_menu): return
+	
+	var selected_corpse = radial_menu.selected_corpse
+	# Если быстро кликнули и никуда не повели мышь, вселяемся в первого попавшегося
+	if not is_instance_valid(selected_corpse) and not radial_menu.corpses.is_empty():
+		selected_corpse = radial_menu.corpses[0]
+		
+	radial_menu.queue_free()
+	radial_menu = null
+	
+	if is_instance_valid(selected_corpse):
+		perform_possession(selected_corpse)
+
+func eject_from_host() -> void:
+	if not is_instance_valid(target_body): return
+	is_transitioning = true
+	
+	var host = target_body
+	
+	var spora_scene = load("res://src/entities/spora/Spora.tscn")
+	var spora = spora_scene.instantiate()
+	
+	host.get_parent().add_child(spora)
+	spora.global_position = host.global_position + Vector2(0, -40)
+	
+	host.remove_child(self)
+	spora.add_child(self)
+	
+	host.set_state(host.BodyState.CORPSE)
+	update_target_body()
+	spora._check_and_create_camera()
+	is_transitioning = false
+
+func perform_possession(best: Node) -> void:
+	is_transitioning = true
+	target_body.is_possessing = true
+	
+	# Add a small delay for visual effect
+	await get_tree().create_timer(0.3).timeout
+	
+	if is_instance_valid(target_body) and is_instance_valid(best):
+		var old_body = target_body
+		old_body.is_possessing = false
+		
+		# Если старое тело было оригинальной Спорой, оно "растворяется" во враге (удаляется)
+		# Иначе старое тело просто падает замертво (становится трупом)
+		if old_body is Spora:
+			# Не ставим состояние CORPSE, просто удаляем
+			pass
+		else:
+			old_body.set_state(old_body.BodyState.CORPSE)
 			
-			# Add a small delay for visual effect
-			await get_tree().create_timer(0.3).timeout
+		var parent = old_body.get_parent()
+		if parent:
+			old_body.remove_child(self)
+			best.add_child(self)
+			best.set_state(best.BodyState.POSSESSED, old_body)
+			update_target_body()
 			
-			if is_instance_valid(target_body) and is_instance_valid(best):
-				target_body.is_possessing = false
-				target_body.set_state(target_body.BodyState.CORPSE)
-				get_parent().remove_child(self)
-				best.add_child(self)
-				best.set_state(best.BodyState.POSSESSED, target_body)
-				update_target_body()
+			if old_body is Spora:
+				old_body.queue_free()
+	
+	is_transitioning = false

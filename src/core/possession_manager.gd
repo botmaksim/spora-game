@@ -25,3 +25,11 @@ func get_best_corpse(player_pos: Vector2, max_dist_x: float, max_dist_y: float) 
 				min_decay = decay
 				best_corpse = c
 	return best_corpse
+
+func get_corpses_in_radius(player_pos: Vector2, radius: float) -> Array:
+	var result = []
+	for c in corpses:
+		if is_instance_valid(c):
+			if c.global_position.distance_to(player_pos) <= radius:
+				result.append(c)
+	return result
