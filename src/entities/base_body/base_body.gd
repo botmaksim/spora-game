@@ -106,6 +106,10 @@ func _ready() -> void:
 			if child is BaseAbility:
 				abilities[child.ability_id] = child
 
+	# Первичный запуск камеры при старте игры
+	if has_node("PlayerController") or current_state == BodyState.POSSESSED:
+		_check_and_create_camera()
+
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	
@@ -199,6 +203,10 @@ func die() -> void:
 
 func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 	current_state = new_state
+	
+	# ЗАЩИТА: проверяем, что мы в игре, а не в редакторе Godot
+	var in_game = not Engine.is_editor_hint() and is_inside_tree()
+	
 	match current_state:
 		BodyState.NORMAL:
 			is_alive = true
@@ -216,13 +224,19 @@ func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 				sprite.modulate = Color(1, 1, 1, 1)
 		BodyState.CORPSE:
 			is_alive = false
-			if get_node_or_null("/root/PossessionManager"):
+			
+			# Удаляем камеру у трупа
+			if has_node("DynamicCamera"):
+				get_node("DynamicCamera").queue_free()
+				
+			if in_game and get_node_or_null("/root/PossessionManager"):
 				get_node("/root/PossessionManager").register_corpse(self)
 		BodyState.POSSESSED:
 			is_alive = true
 			current_hp = max_hp
 			hp_changed.emit(current_hp, max_hp)
-			if get_node_or_null("/root/PossessionManager"):
+			
+			if in_game and get_node_or_null("/root/PossessionManager"):
 				get_node("/root/PossessionManager").unregister_corpse(self)
 			#копирование и вставка текстур жмурика после захвата тела на игрока
 			if source_body:
@@ -233,6 +247,9 @@ func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 				_sync_shape() #синхронизация коллизии под размер нового спрайта врага
 			if sprite:
 				sprite.modulate = Color(0.2, 1.0, 0.2, 1.0)
+			
+			# Включаем камеру при вселении
+			_check_and_create_camera()
 
 #функция смены текстуры для дочерних классов
 func apply_texture(new_texture: Texture2D) -> void:
@@ -257,3 +274,42 @@ func _sync_shape() -> void:
 	if sp and sp.texture and col and col.shape is RectangleShape2D:
 		col.shape = col.shape.duplicate() 
 		col.shape.size = sp.texture.get_size() * sp.scale
+
+# ========================================================
+# СИСТЕМА ДИНАМИЧЕСКОЙ КАМЕРЫ И СЛЕЖЕНИЯ ПРИ ПЕРЕХОДАХ
+# ========================================================
+
+# Срабатывает автоматически при входе персонажа на любую новую сцену
+func _notification(what: int) -> void:
+	if Engine.is_editor_hint(): return
+	
+	if what == NOTIFICATION_ENTER_TREE:
+		# Если это активный управляемый персонаж, принудительно возвращаем фокус камере
+		if has_node("PlayerController") or current_state == BodyState.POSSESSED:
+			_check_and_create_camera.call_deferred()
+
+# Функция создания и жесткой активации камеры на персонаже
+func _check_and_create_camera() -> void:
+	if Engine.is_editor_hint(): return
+	
+	var camera = get_node_or_null("DynamicCamera") as Camera2D
+	if not camera:
+		camera = Camera2D.new()
+		camera.name = "DynamicCamera"
+		add_child(camera)
+		
+		# Настройки плавности хода
+		camera.position_smoothing_enabled = true
+		camera.position_smoothing_speed = 6.0
+		
+		# Включение "окна" безопасности (Deadzone)
+		camera.drag_horizontal_enabled = true
+		camera.drag_vertical_enabled = true
+		camera.drag_left_margin = 0.25
+		camera.drag_right_margin = 0.25
+		camera.drag_top_margin = 0.2
+		camera.drag_bottom_margin = 0.2
+	
+	# Заставляем движок сделать эту камеру активной прямо сейчас
+	camera.make_current()
+	print("[CAMERA SYSTEM] Фокус камеры успешно зафиксирован на: ", name)

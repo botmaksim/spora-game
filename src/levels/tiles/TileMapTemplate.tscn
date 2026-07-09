@@ -1,16 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://ct0dtngn4ubqq"]
 
-[ext_resource type="TileSet" path="res://src/levels/tiles/world_tileset.tres" id="1_ts"]
+[ext_resource type="TileSet" uid="uid://cd5p8xj5q7vwu" path="res://src/levels/tiles/world_tileset.tres" id="1_ts"]
 
-[node name="LevelMap" type="Node2D"]
+[node name="Lvl_map" type="Node2D" unique_id=799829284]
 
-[node name="BackgroundLayer" type="TileMapLayer" parent="."]
+[node name="BackgroundLayer" type="TileMapLayer" parent="." unique_id=1156164123]
 modulate = Color(0.5, 0.5, 0.5, 1)
 tile_set = ExtResource("1_ts")
 
-[node name="TerrainLayer" type="TileMapLayer" parent="."]
+[node name="TerrainLayer" type="TileMapLayer" parent="." unique_id=360737625]
 tile_set = ExtResource("1_ts")
 
-[node name="WaterLayer" type="TileMapLayer" parent="."]
+[node name="WaterLayer" type="TileMapLayer" parent="." unique_id=485472220]
 z_index = 5
 tile_set = ExtResource("1_ts")
