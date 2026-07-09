@@ -2,7 +2,6 @@ extends BaseBody
 class_name Spora
 
 #для корректной отрисовки текстур
-var is_attacking: bool = false
 var is_possessing: bool = false
 
 func _physics_process(delta: float) -> void:

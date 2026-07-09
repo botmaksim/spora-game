@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck2ilaxv60p5j"
-path="res://.godot/imported/ant attack left.png-bb53425bde48c016e848522a52049e0e.ctex"
+path="res://.godot/imported/ant attack left.png-3ab47adb487e9158739d650cd7d4b792.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/assets/ant sprites/ant attack left.png"
-dest_files=["res://.godot/imported/ant attack left.png-bb53425bde48c016e848522a52049e0e.ctex"]
+source_file="res://src/assets/ant_sprites/ant attack left.png"
+dest_files=["res://.godot/imported/ant attack left.png-3ab47adb487e9158739d650cd7d4b792.ctex"]
 
 [params]
 

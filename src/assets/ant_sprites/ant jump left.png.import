@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dgfnf5vi7m1js"
-path="res://.godot/imported/ant jump left.png-13bf55f0a0084a5e77e1d4900bbb7083.ctex"
+path="res://.godot/imported/ant jump left.png-50e131234810dda7833d3b4d7e304103.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/assets/ant sprites/ant jump left.png"
-dest_files=["res://.godot/imported/ant jump left.png-13bf55f0a0084a5e77e1d4900bbb7083.ctex"]
+source_file="res://src/assets/ant_sprites/ant jump left.png"
+dest_files=["res://.godot/imported/ant jump left.png-50e131234810dda7833d3b4d7e304103.ctex"]
 
 [params]
 

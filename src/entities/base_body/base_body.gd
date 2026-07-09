@@ -76,6 +76,11 @@ var abilities: Dictionary = {}
 @onready var base_gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity") * gravity_scale
 @onready var sprite: Sprite2D = get_node_or_null("Sprite2D")
 
+var hp_bar: ProgressBar
+var contact_area: Area2D
+var is_attacking: bool = false
+@export var contact_damage: int = 10
+
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	
@@ -109,6 +114,56 @@ func _ready() -> void:
 	# Первичный запуск камеры при старте игры
 	if has_node("PlayerController") or current_state == BodyState.POSSESSED:
 		_check_and_create_camera()
+		
+	_setup_hp_bar()
+	_setup_contact_damage.call_deferred()
+
+func _setup_hp_bar() -> void:
+	hp_bar = ProgressBar.new()
+	hp_bar.name = "HPBar"
+	hp_bar.custom_minimum_size = Vector2(50, 8)
+	hp_bar.position = Vector2(-25, -50)
+	hp_bar.show_percentage = false
+	var style_bg = StyleBoxFlat.new()
+	style_bg.bg_color = Color(0.2, 0.2, 0.2, 0.8)
+	var style_fill = StyleBoxFlat.new()
+	style_fill.bg_color = Color(0.9, 0.1, 0.1, 1.0)
+	hp_bar.add_theme_stylebox_override("background", style_bg)
+	hp_bar.add_theme_stylebox_override("fill", style_fill)
+	hp_bar.max_value = max_hp
+	hp_bar.value = current_hp
+	hp_bar.visible = true
+	add_child(hp_bar)
+
+func _setup_contact_damage() -> void:
+	contact_area = Area2D.new()
+	contact_area.name = "ContactDamageArea"
+	add_child(contact_area)
+	
+	var col = CollisionShape2D.new()
+	var main_col = get_node_or_null("CollisionShape2D")
+	if main_col and main_col.shape:
+		col.shape = main_col.shape.duplicate()
+		if col.shape is RectangleShape2D:
+			col.shape.size += Vector2(4, 4)
+		col.position = main_col.position
+	
+	contact_area.add_child(col)
+	contact_area.body_entered.connect(_on_contact_body_entered)
+
+func _on_contact_body_entered(body: Node2D) -> void:
+	if Engine.is_editor_hint() or body == self or not is_alive: return
+	
+	# Контактный урон наносится только игроку (телу с PlayerController)
+	if not body.has_node("PlayerController"): return
+	# Само тело игрока не наносит контактный урон
+	if self.has_node("PlayerController"): return
+	
+	# Отсутствие контактного урона, если враг сейчас атакует (урон нанесет хитбокс атаки)
+	if is_attacking: return
+	
+	if body.has_method("take_damage"):
+		body.take_damage(contact_damage)
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -187,6 +242,8 @@ func take_damage(amount: int) -> void:
 	hp_changed.emit(current_hp, max_hp)
 	took_damage.emit(amount)
 	
+	if hp_bar: hp_bar.value = current_hp
+	
 	if current_hp <= 0: die()
 
 func die() -> void:
@@ -194,6 +251,8 @@ func die() -> void:
 	current_hp = 0
 	hp_changed.emit(current_hp, max_hp)
 	input_dir = Vector2.ZERO
+	
+	if hp_bar: hp_bar.visible = false
 	
 	var ai_controller = get_node_or_null("AIController")
 	if ai_controller: ai_controller.queue_free()
@@ -238,6 +297,18 @@ func set_state(new_state: BodyState, source_body: BaseBody = null) -> void:
 			
 			if in_game and get_node_or_null("/root/PossessionManager"):
 				get_node("/root/PossessionManager").unregister_corpse(self)
+				
+			# Calculate and apply decay penalty
+			var decay_mgr = get_node_or_null("DecayManager")
+			if decay_mgr:
+				var penalty = 1.0 - (decay_mgr.current_decay / decay_mgr.max_decay)
+				penalty = max(0.2, penalty) # Minimum 20% effectiveness
+				speed_multiplier = penalty
+				damage_multiplier = penalty
+			else:
+				speed_multiplier = 1.0
+				damage_multiplier = 1.0
+				
 			#копирование и вставка текстур жмурика после захвата тела на игрока
 			if source_body:
 				copy_textures_from(source_body)
@@ -302,4 +373,3 @@ func _check_and_create_camera() -> void:
 		camera.drag_bottom_margin = 0.2
 	
 	camera.make_current()
-

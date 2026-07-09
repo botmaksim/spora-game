@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://hgugg5rn48cn" path="res://src/assets/bleb sprites/bleb_posession.png" id="6_sv52b"]
 [ext_resource type="Texture2D" uid="uid://cnaq8pjm1163g" path="res://src/assets/placeholder_white.png" id="tex_placeholder"]
 
+[ext_resource type="PackedScene" path="res://src/abilities/attacks/MeleeAttackAbility.tscn" id="7_melee"]
+
 [node name="Spora" type="CharacterBody2D" unique_id=372982113]
 script = ExtResource("1_script")
 tex_idle = ExtResource("2_mn8gp")
@@ -27,7 +29,7 @@ one_shot = true
 
 [node name="Abilities" type="Node" parent="." unique_id=82120423]
 
-[node name="DashAttackAbility" type="Node" parent="Abilities" unique_id=1710590511]
+[node name="MeleeAttackAbility" parent="Abilities" instance=ExtResource("7_melee")]
 
 [node name="SwimAbility" type="Node" parent="Abilities" unique_id=734262822]
 

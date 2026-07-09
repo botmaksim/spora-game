@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://su4d0ctfmiww"
-path="res://.godot/imported/ant death.png-3e96beb07a6ac170cf1e6d1d59add4e9.ctex"
+uid="uid://cbqlfgq2w3n3s"
+path="res://.godot/imported/belb attack2 left.png-4db2aca81dd494c40858a0ec2bfaaef0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/assets/ant_sprites/ant death.png"
-dest_files=["res://.godot/imported/ant death.png-3e96beb07a6ac170cf1e6d1d59add4e9.ctex"]
+source_file="res://src/assets/bleb sprites/belb attack2 left.png"
+dest_files=["res://.godot/imported/belb attack2 left.png-4db2aca81dd494c40858a0ec2bfaaef0.ctex"]
 
 [params]
 
