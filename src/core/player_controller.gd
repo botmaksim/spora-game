@@ -55,7 +55,7 @@ func open_radial_menu() -> void:
 	var pos_mgr = get_node_or_null("/root/PossessionManager")
 	if not pos_mgr: return
 	
-	var corpses = pos_mgr.get_corpses_in_radius(target_body.global_position, 800.0) # Увеличил радиус до 800
+	var corpses = pos_mgr.get_corpses_in_radius(target_body.global_position, 800.0) 
 	
 	var script = load("res://src/ui/possession_radial_menu.gd")
 	if not script: return
@@ -72,7 +72,7 @@ func close_radial_menu_and_possess() -> void:
 	if not is_instance_valid(radial_menu): return
 	
 	var selected_corpse = radial_menu.selected_corpse
-	# Если быстро кликнули и никуда не повели мышь, вселяемся в первого попавшегося
+	
 	if not is_instance_valid(selected_corpse) and not radial_menu.corpses.is_empty():
 		selected_corpse = radial_menu.corpses[0]
 		
@@ -104,19 +104,20 @@ func eject_from_host() -> void:
 
 func perform_possession(best: Node) -> void:
 	is_transitioning = true
-	target_body.is_possessing = true
+	if "is_possessing" in target_body:
+		target_body.is_possessing = true
 	
-	# Add a small delay for visual effect
 	await get_tree().create_timer(0.3).timeout
 	
 	if is_instance_valid(target_body) and is_instance_valid(best):
 		var old_body = target_body
-		old_body.is_possessing = false
+		if "is_possessing" in old_body:
+			old_body.is_possessing = false
 		
-		# Если старое тело было оригинальной Спорой, оно "растворяется" во враге (удаляется)
-		# Иначе старое тело просто падает замертво (становится трупом)
+		
+		
 		if old_body is Spora:
-			# Не ставим состояние CORPSE, просто удаляем
+			
 			pass
 		else:
 			old_body.set_state(old_body.BodyState.CORPSE)

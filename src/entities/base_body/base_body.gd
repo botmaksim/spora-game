@@ -28,14 +28,14 @@ signal died(body: Node2D)
 @export_group("Combat")
 @export var invulnerability_time: float = 0.5 
 
-#добавил шнягу для экспорта текстур
+
 @export_group("Visuals & Textures")
 @export var tex_idle: Texture2D
 @export var tex_move: Texture2D
 @export var tex_jump: Texture2D
 @export var tex_attack: Texture2D
 @export var tex_corpse: Texture2D
-@export var tex_possession: Texture2D #тупо для споры
+@export var tex_possession: Texture2D 
 
 @export_group("Editor Tools")
 @export var sync_shape_to_sprite: bool = false:
@@ -49,10 +49,10 @@ var is_invulnerable: bool = false
 
 enum BodyState { NORMAL, CORPSE, POSSESSED }
 var current_state: BodyState = BodyState.NORMAL
-#ниже переменная для хранение теккстуры захваченного тела
+
 var possessed_texture: Texture2D = null
 
-#переменные для сохранения базовых текстур споры для возвращения при выходе их тела
+
 var default_tex_idle: Texture2D
 var default_tex_move: Texture2D
 var default_tex_jump: Texture2D
@@ -84,7 +84,7 @@ var is_attacking: bool = false
 func _ready() -> void:
 	if Engine.is_editor_hint(): return
 	
-	#сохранение родных текстур споры при запуске
+	
 	default_tex_idle = tex_idle
 	default_tex_move = tex_move
 	default_tex_jump = tex_jump
@@ -111,7 +111,7 @@ func _ready() -> void:
 			if child is BaseAbility:
 				abilities[child.ability_id] = child
 
-	# Первичный запуск камеры при старте игры
+	
 	if has_node("PlayerController") or current_state == BodyState.POSSESSED:
 		_check_and_create_camera()
 		
@@ -154,12 +154,12 @@ func _setup_contact_damage() -> void:
 func _on_contact_body_entered(body: Node2D) -> void:
 	if Engine.is_editor_hint() or body == self or not is_alive: return
 	
-	# Контактный урон наносится только игроку (телу с PlayerController)
+	
 	if not body.has_node("PlayerController"): return
-	# Само тело игрока не наносит контактный урон
+	
 	if self.has_node("PlayerController"): return
 	
-	# Отсутствие контактного урона, если враг сейчас атакует (урон нанесет хитбокс атаки)
+	
 	if is_attacking: return
 	
 	if body.has_method("take_damage"):
@@ -265,14 +265,14 @@ func die() -> void:
 func set_state(new_state: BodyState, source_body: CharacterBody2D = null) -> void:
 	current_state = new_state
 	
-	# ЗАЩИТА: проверяем, что мы в игре, а не в редакторе Godot
+	
 	var in_game = not Engine.is_editor_hint() and is_inside_tree()
 	
 	match current_state:
 		BodyState.NORMAL:
 			is_alive = true
-			possessed_texture = null #сбрасываем текстуру челика из которого вышли
-			# Возвращаем родные текстуры Споры при выходе из тела
+			possessed_texture = null 
+			
 			tex_idle = default_tex_idle
 			tex_move = default_tex_move
 			tex_jump = default_tex_jump
@@ -286,7 +286,7 @@ func set_state(new_state: BodyState, source_body: CharacterBody2D = null) -> voi
 		BodyState.CORPSE:
 			is_alive = false
 			
-			# Удаляем камеру у трупа
+			
 			if has_node("DynamicCamera"):
 				get_node("DynamicCamera").queue_free()
 				
@@ -300,33 +300,33 @@ func set_state(new_state: BodyState, source_body: CharacterBody2D = null) -> voi
 			if in_game and get_node_or_null("/root/PossessionManager"):
 				get_node("/root/PossessionManager").unregister_corpse(self)
 				
-			# Calculate and apply decay penalty
+			
 			var decay_mgr = get_node_or_null("DecayManager")
 			if decay_mgr:
 				var penalty = 1.0 - (decay_mgr.current_decay / decay_mgr.max_decay)
-				penalty = max(0.2, penalty) # Minimum 20% effectiveness
+				penalty = max(0.2, penalty) 
 				speed_multiplier = penalty
 				damage_multiplier = penalty
 			else:
 				speed_multiplier = 1.0
 				damage_multiplier = 1.0
 				
-			# Мы больше не копируем текстуры паразита в хоста,
-			# так как мы просто передаём PlayerController в тело хоста.
-			# Текстуры хоста остаются его родными.
+			
+			
+			
 			if sprite:
 				sprite.modulate = Color(0.2, 1.0, 0.2, 1.0)
 			
-			# Включаем камеру при вселении
+			
 			_check_and_create_camera()
 
-#функция смены текстуры для дочерних классов
+
 func apply_texture(new_texture: Texture2D) -> void:
 	if not sprite: return
 	if sprite.texture != new_texture:
 		sprite.texture = new_texture 
 
-#функция для копирования всего набора текстур захваченного тела спорой
+
 func copy_textures_from(source_body: CharacterBody2D) -> void:
 	if not source_body: return
 	tex_idle = source_body.tex_idle

@@ -40,7 +40,6 @@ func _process(_delta: float) -> void:
 			queue_redraw()
 
 func _draw() -> void:
-	# Обводка рисуется всегда, чтобы игрок видел, что меню работает
 	draw_arc(Vector2.ZERO, inner_radius, 0, PI*2, 32, line_color, 2.0)
 	draw_arc(Vector2.ZERO, outer_radius, 0, PI*2, 64, line_color, 2.0)
 
@@ -67,12 +66,10 @@ func _draw() -> void:
 			
 		draw_polygon(points, PackedColorArray([color]))
 		
-		# Разделительные линии
 		draw_line(Vector2(cos(start_angle), sin(start_angle)) * inner_radius, 
 				  Vector2(cos(start_angle), sin(start_angle)) * outer_radius, 
 				  line_color, 2.0)
 				  
-		# Иконки
 		var mid_angle = start_angle + segment_angle / 2.0
 		var icon_dist = (inner_radius + outer_radius) / 2.0
 		var icon_pos = Vector2(cos(mid_angle), sin(mid_angle)) * icon_dist
@@ -84,7 +81,6 @@ func _draw() -> void:
 				var tex = sprite.texture
 				var sz = tex.get_size()
 				
-				# Пытаемся взять область текстуры (регион) если есть
 				if sprite.region_enabled:
 					sz = sprite.region_rect.size
 					
