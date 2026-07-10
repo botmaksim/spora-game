@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" path="res://src/abilities/attacks/DashAttackAbility.tscn" id="9_dash"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ant1"]
-size = Vector2(96, 96)
+size = Vector2(96, 70)
 
 [node name="Ant" type="CharacterBody2D" unique_id=1065861491]
 collision_mask = 2
@@ -27,6 +27,7 @@ scale = Vector2(0.4375001, 0.25)
 texture = ExtResource("6_placeholder")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1384678466]
+position = Vector2(0, -13)
 shape = SubResource("RectangleShape2D_ant1")
 
 [node name="CoyoteTimer" type="Timer" parent="." unique_id=1731769192]
